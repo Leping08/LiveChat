@@ -6,12 +6,18 @@ use Illuminate\Database\Eloquent\Model;
 
 class Post extends Model
 {
-    public function Comments()
+    protected $fillable = [
+        'title',
+        'body',
+        'user_id'
+    ];
+
+    public function comments()
     {
         return $this->hasMany(Comment::class);
     }
 
-    public function Author()
+    public function author()
     {
         return $this->belongsTo(User::class);
     }

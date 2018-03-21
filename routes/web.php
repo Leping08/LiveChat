@@ -11,12 +11,16 @@
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
-
 Auth::routes();
 
-Route::get('/home', 'HomeController@index')->name('home');
+Route::get('/', 'PostController@index');
 
-Route::get('/posts/', 'PostController@index');
+Route::post('/', 'PostController@store');
+
+Route::get('/the-good-stuff/', 'PostController@index');
+
+Route::get('/the-good-stuff/{id}/', 'PostController@show');
+
+Route::post('/the-good-stuff/{id}/', 'CommentController@store');
+
+Route::get('/profile/', 'ProfileController@index');

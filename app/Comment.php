@@ -3,16 +3,29 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Post;
+use App\User;
 
 class Comment extends Model
 {
-    public function Post()
+    protected $fillable = [
+        'body',
+        'user_id',
+        'post_id'
+    ];
+
+    public function post()
     {
-        $this->belongsTo(Post::class);
+        return $this->belongsTo(Post::class);
     }
 
-    public function Author()
+    public function user()
     {
-        $this->belongsTo(User::class);
+        return $this->belongsTo(User::class);
+    }
+
+    public function author()
+    {
+        return $this->user->getAttribute('name');
     }
 }
