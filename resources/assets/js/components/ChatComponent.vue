@@ -36,7 +36,7 @@
 
                 <div class="card-footer bg-light">
                     <div class="form-group">
-                        <input type="text" class="form-control" id="text" name="text" v-model="text" @keyup.enter="sendMessage()" placeholder="Send a message">
+                        <input type="text" class="form-control" id="text" name="text" v-model="text" @keyup.enter="sendMessage()" placeholder="Send a message" autocomplete="off">
                     </div>
                 </div>
             </template>

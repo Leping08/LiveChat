@@ -51579,7 +51579,8 @@ var render = function() {
                         type: "text",
                         id: "text",
                         name: "text",
-                        placeholder: "Send a message"
+                        placeholder: "Send a message",
+                        autocomplete: "off"
                       },
                       domProps: { value: _vm.text },
                       on: {
