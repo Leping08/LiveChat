@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Http\Request;
+use App\Message;
 
 /*
 |--------------------------------------------------------------------------
@@ -13,6 +14,19 @@ use Illuminate\Http\Request;
 |
 */
 
-Route::middleware('auth:api')->get('/user', function (Request $request) {
+/*Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
+});*/
+
+Route::get('/chat', function (){
+    $chatMessage =  Message::with('user')
+        ->latest()
+        ->take(25)
+        ->get();
+
+    return $chatMessage->reverse()->values();
 });
+
+Route::get('/chat/history/{id}', 'MessageController@history');
+
+Route::post('/chat', 'MessageController@store');

@@ -1,14 +1,100 @@
-
 // Fonts
-@import url("https://fonts.googleapis.com/css?family=Raleway:300,400,600");
+//@import url("https://fonts.googleapis.com/css?family=Raleway:300,400,600");
 
 // Variables
-@import "variables";
+//@import "variables";
 
 // Bootstrap
-@import '~bootstrap/scss/bootstrap';
+//@import '~bootstrap/scss/bootstrap';
 
-.navbar-laravel {
-  background-color: #fff;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
+.chat-box{
+  overflow: auto;
+  height: 400px;
+}
+
+.small-message-text{
+  font-size: 60%;
+  font-weight: 400;
+  color: #eaebf1;
+}
+
+.message-text{
+  /*border-top: 1px solid #cccccc;*/
+}
+
+.chat{
+  position:relative;
+  display:inline-block;
+  box-shadow: 2px 2px 5px black;
+  width:100%;
+  height:360px;
+  background-color:#eee;
+  border: 1px solid #fff;
+}
+
+.conversation{
+  display:block;
+  width:100%;
+  height:310px;
+  overflow:auto;
+  background-color:#eee;
+}
+
+.texting{
+  display:block;
+  text-align:center;
+  padding:10px;
+}
+
+.message-line{
+  position:relative;
+  display:flex;
+  width:100%;
+  min-height:40px;
+}
+
+.message{
+  display:block;
+  padding:4px 10px;
+  margin-bottom: 5px;
+  margin-top: 5px;
+  color:#fff;
+  background-color:#2C3E50;
+  border-radius:10px;
+}
+
+.messageFromMe{
+  display:block;
+  float:right;
+  margin-left: auto;
+  padding:4px 10px;
+  margin-bottom: 5px;
+  margin-top: 5px;
+  color:#fff;
+  background-color:#18BC9C;
+  border-radius:10px;
+}
+
+.shadow-md-light {
+  box-shadow: 0 0 12px 8px #fff
+}
+
+.shadow {
+  box-shadow: 0 2px 4px 0 rgba(0,0,0,.1)
+}
+
+.shadow-md {
+  box-shadow: 0 4px 8px 0 rgba(0,0,0,.12),0 2px 4px 0 rgba(0,0,0,.08)
+}
+
+.shadow-lg {
+  box-shadow: 0 15px 30px 0 rgba(0,0,0,.11),0 5px 15px 0 rgba(0,0,0,.08)
+}
+
+.shadow-inner {
+  box-shadow: inset 0 2px 4px 0 rgba(0,0,0,.06)
+}
+
+.shadow-none {
+  box-shadow: none
 }

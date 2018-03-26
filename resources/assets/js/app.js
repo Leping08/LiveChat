@@ -15,7 +15,11 @@ window.Vue = require('vue');
  * or customize the JavaScript scaffolding to fit your unique needs.
  */
 
-Vue.component('example-component', require('./components/ExampleComponent.vue'));
+Vue.component('chat-component', require('./components/ChatComponent.vue'));
+
+import moment from 'moment'
+
+Vue.prototype.moment = moment;
 
 const app = new Vue({
     el: '#app'

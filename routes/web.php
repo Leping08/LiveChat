@@ -15,12 +15,12 @@ Auth::routes();
 
 Route::get('/', 'PostController@index');
 
-Route::post('/', 'PostController@store');
-
-Route::get('/the-good-stuff/', 'PostController@index');
-
-Route::get('/the-good-stuff/{id}/', 'PostController@show');
-
-Route::post('/the-good-stuff/{id}/', 'CommentController@store');
-
-Route::get('/profile/', 'ProfileController@index');
+Route::group(['middleware' => 'auth'], function () {
+    Route::post('/', 'PostController@store');
+    Route::get('/chat', 'MessageController@index');
+    Route::post('/chat', 'MessageController@store');
+    Route::get('/the-good-stuff/', 'PostController@index');
+    Route::get('/the-good-stuff/{id}/', 'PostController@show');
+    Route::post('/the-good-stuff/{id}/', 'CommentController@store');
+    Route::get('/profile/', 'ProfileController@index');
+});
