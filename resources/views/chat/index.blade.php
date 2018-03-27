@@ -2,6 +2,6 @@
 
 @section('content')
     <div>
-        <chat-component :auth_user="{{Auth::user()}}"></chat-component>
+        <calendar-component></calendar-component>
     </div>
 @endsection

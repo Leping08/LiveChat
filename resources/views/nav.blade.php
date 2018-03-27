@@ -22,7 +22,7 @@
                     @else
                     <li><a class="nav-link" href="/">e.t. phone home</a></li>
                     <li><a class="nav-link" href="/the-good-stuff/">the good stuff</a></li>
-                    <li><a class="nav-link" href="/chat">chat</a></li>
+                    <li><a class="nav-link" href="/calendar">calendar</a></li>
                     <li class="nav-item dropdown" id="navbarSupportedContent">
                         <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
                             {{ Auth::user()->name }} <span class="caret"></span>

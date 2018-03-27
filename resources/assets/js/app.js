@@ -16,8 +16,14 @@ window.Vue = require('vue');
  */
 
 Vue.component('chat-component', require('./components/ChatComponent.vue'));
+Vue.component('calendar-component', require('./components/CalendarComponent.vue'));
 
 import moment from 'moment'
+import vueEventCalendar from 'vue-event-calendar'
+Vue.use(vueEventCalendar, {
+    locale: 'en',
+    color: '#2C3E50'
+});
 
 Vue.prototype.moment = moment;
 

@@ -27,7 +27,7 @@
                         <div class="message-line">
                             <div :class="messageColor(message)">
                                 <small class="small-message-text">{{message.user.name}} - {{moment(message.created_at).fromNow()}}</small>
-                                <div class="message-text">{{message.text}}</div>
+                                <div class="message-text" v-html="message.text"></div>
                             </div>
                         </div>
                     </div>
@@ -59,8 +59,14 @@
         },
         props: ['auth_user'],
         created() {
+            if ('Notification' in window) {
+                Notification.requestPermission();
+            }
             window.Echo.channel('chat').listen('sendMessage', e => {
                 this.messages.push(e.message);
+                if((this.auth_user.id) != (e.message.user.id)){
+                    new Notification(e.message.text);
+                }
             });
             this.getMessages();
         },

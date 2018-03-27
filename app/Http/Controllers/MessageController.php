@@ -10,7 +10,12 @@ class MessageController extends Controller
 {
     public function index()
     {
-        return view('chat.index');
+        $chatMessage =  Message::with('user')
+            ->latest()
+            ->take(25)
+            ->get();
+
+        return $chatMessage->reverse()->values();
     }
 
     public function store(Request $request)
@@ -31,10 +36,12 @@ class MessageController extends Controller
 
     public function history($id)
     {
-        if(($id - 25) <= 1){
+        $messagesBack = 25;
+
+        if(($id - $messagesBack) <= 1){
             $id = 1;
         } else {
-            $id = $id - 25;
+            $id = $id - $messagesBack;
         }
 
         $chatMessage = Message::with('user')
@@ -43,6 +50,5 @@ class MessageController extends Controller
             ->get();
 
         return $chatMessage->reverse()->values();
-
     }
 }

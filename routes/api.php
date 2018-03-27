@@ -18,14 +18,7 @@ use App\Message;
     return $request->user();
 });*/
 
-Route::get('/chat', function (){
-    $chatMessage =  Message::with('user')
-        ->latest()
-        ->take(25)
-        ->get();
-
-    return $chatMessage->reverse()->values();
-});
+Route::get('/chat', 'MessageController@index');
 
 Route::get('/chat/history/{id}', 'MessageController@history');
 
