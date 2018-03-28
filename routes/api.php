@@ -18,8 +18,10 @@ use App\Message;
     return $request->user();
 });*/
 
-Route::get('/chat', 'MessageController@index');
+Route::get('/chat', 'Api\MessageController@index');
 
-Route::get('/chat/history/{id}', 'MessageController@history');
+Route::get('/chat/history/{id}', 'Api\MessageController@history');
 
-Route::post('/chat', 'MessageController@store');
+Route::post('/chat', 'Api\MessageController@store');
+
+Route::get('/events', 'Api\EventController@index');
