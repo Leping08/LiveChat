@@ -11,7 +11,8 @@ class Event extends Model
         'desc'
     ];
 
+    //TODO: Fix format
     protected $dates = [
-        'date'
+        'date' => 'Y/d/m'
     ];
 }

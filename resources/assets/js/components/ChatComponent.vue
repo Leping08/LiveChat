@@ -31,12 +31,13 @@
                             </div>
                         </div>
                     </div>
-                    <!-- TODO: Add person typing message -->
                 </div>
 
                 <div class="card-footer bg-light">
                     <div class="form-group">
-                        <input type="text" class="form-control" id="text" name="text" v-model="text" @keyup.enter="sendMessage()" placeholder="Send a message" autocomplete="off">
+                        <input type="text" class="form-control" id="text" name="text" v-model="text" @keydown="typing" @keyup.enter="sendMessage" placeholder="Send a message" autocomplete="off">
+                        <!-- TODO: Add person typing message -->
+                        <span class="text-muted" v-if="activePeer" v-text="activePeer.name + ' is typing...'"></span>
                     </div>
                 </div>
             </template>
@@ -54,20 +55,15 @@
                 loadingMessages: true,
                 sendingFlag: false,
                 chatBox: null,
-                minimize: false
+                minimize: false,
+                typingTimer: null,
+                activePeer: null,
+                audio: new Audio('/audio/open-ended.mp3')
             };
         },
         props: ['auth_user'],
         created() {
-            if ('Notification' in window) {
-                Notification.requestPermission();
-            }
-            window.Echo.channel('chat').listen('sendMessage', e => {
-                this.messages.push(e.message);
-                if((this.auth_user.id) != (e.message.user.id)){
-                    new Notification(e.message.text);
-                }
-            });
+            this.listenOnChatChanel();
             this.getMessages();
         },
         computed: {
@@ -137,6 +133,39 @@
             open: function () {
                 this.minimize = true;
                 this.scrollToBottom();
+            },
+            typing: function () {
+                window.Echo.private('chat')
+                    .whisper('typing', {
+                        name: this.auth_user.name
+                    });
+            },
+            listenOnChatChanel: function () {
+                if ('Notification' in window) {
+                    Notification.requestPermission();
+                }
+
+                window.Echo.private('chat')
+                    .listen('sendMessage', e => {
+                        this.messages.push(e.message);
+                        this.playNotificationSound();
+                        if((this.auth_user.id) != (e.message.user.id)){
+                            new Notification(e.message.text);
+                        }
+                    });
+
+                window.Echo.private('chat')
+                    .listenForWhisper('typing', e => {
+                        this.activePeer = e;
+                        if(this.typingTimer) clearTimeout(this.typingTimer);
+
+                        this.typingTimer = setTimeout(() => {
+                            this.activePeer = false;
+                        }, 2000);
+                    });
+            },
+            playNotificationSound: function () {
+                this.audio.play();
             }
         }
 

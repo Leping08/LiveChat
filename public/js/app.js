@@ -51363,6 +51363,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     data: function data() {
@@ -51373,23 +51374,16 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             loadingMessages: true,
             sendingFlag: false,
             chatBox: null,
-            minimize: false
+            minimize: false,
+            typingTimer: null,
+            activePeer: null,
+            audio: new Audio('/audio/open-ended.mp3')
         };
     },
 
     props: ['auth_user'],
     created: function created() {
-        var _this = this;
-
-        if ('Notification' in window) {
-            Notification.requestPermission();
-        }
-        window.Echo.channel('chat').listen('sendMessage', function (e) {
-            _this.messages.push(e.message);
-            if (_this.auth_user.id != e.message.user.id) {
-                new Notification(e.message.text);
-            }
-        });
+        this.listenOnChatChanel();
         this.getMessages();
     },
 
@@ -51403,19 +51397,19 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     },
     methods: {
         getMessages: function getMessages() {
-            var _this2 = this;
+            var _this = this;
 
             this.loadingMessages = true;
             axios.get('/api/chat').then(function (response) {
-                _this2.messages = response.data;
-                _this2.loadingMessages = false;
+                _this.messages = response.data;
+                _this.loadingMessages = false;
             }).catch(function (e) {
-                _this2.loadingMessages = false;
+                _this.loadingMessages = false;
                 console.log(e);
             });
         },
         sendMessage: function sendMessage() {
-            var _this3 = this;
+            var _this2 = this;
 
             if (!this.sendingFlag) {
                 this.sendingFlag = true;
@@ -51423,11 +51417,11 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                     text: this.text,
                     user_id: this.auth_user.id
                 }).then(function (response) {
-                    _this3.text = '';
-                    _this3.sendingFlag = false;
+                    _this2.text = '';
+                    _this2.sendingFlag = false;
                 }).catch(function (e) {
                     console.log(e);
-                    _this3.sendingFlag = false;
+                    _this2.sendingFlag = false;
                 });
             }
         },
@@ -51439,18 +51433,18 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             }
         },
         scrollToBottom: function scrollToBottom() {
-            var _this4 = this;
+            var _this3 = this;
 
             setTimeout(function () {
-                _this4.chatBox = document.getElementById("chatBox");
-                _this4.chatBox.scrollTop = _this4.chatBox.scrollHeight;
+                _this3.chatBox = document.getElementById("chatBox");
+                _this3.chatBox.scrollTop = _this3.chatBox.scrollHeight;
             }, 100);
         },
         loadChatHistory: function loadChatHistory() {
-            var _this5 = this;
+            var _this4 = this;
 
             axios.get('/api/chat/history/' + this.messages[0].id).then(function (response) {
-                _this5.messages = response.data;
+                _this4.messages = response.data;
             }).catch(function (e) {
                 console.log(e);
             });
@@ -51461,6 +51455,38 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         open: function open() {
             this.minimize = true;
             this.scrollToBottom();
+        },
+        typing: function typing() {
+            window.Echo.private('chat').whisper('typing', {
+                name: this.auth_user.name
+            });
+        },
+        listenOnChatChanel: function listenOnChatChanel() {
+            var _this5 = this;
+
+            if ('Notification' in window) {
+                Notification.requestPermission();
+            }
+
+            window.Echo.private('chat').listen('sendMessage', function (e) {
+                _this5.messages.push(e.message);
+                _this5.playNotificationSound();
+                if (_this5.auth_user.id != e.message.user.id) {
+                    new Notification(e.message.text);
+                }
+            });
+
+            window.Echo.private('chat').listenForWhisper('typing', function (e) {
+                _this5.activePeer = e;
+                if (_this5.typingTimer) clearTimeout(_this5.typingTimer);
+
+                _this5.typingTimer = setTimeout(function () {
+                    _this5.activePeer = false;
+                }, 2000);
+            });
+        },
+        playNotificationSound: function playNotificationSound() {
+            this.audio.play();
         }
     }
 
@@ -51599,6 +51625,7 @@ var render = function() {
                       },
                       domProps: { value: _vm.text },
                       on: {
+                        keydown: _vm.typing,
                         keyup: function($event) {
                           if (
                             !("button" in $event) &&
@@ -51612,7 +51639,7 @@ var render = function() {
                           ) {
                             return null
                           }
-                          _vm.sendMessage()
+                          return _vm.sendMessage($event)
                         },
                         input: function($event) {
                           if ($event.target.composing) {
@@ -51621,7 +51648,18 @@ var render = function() {
                           _vm.text = $event.target.value
                         }
                       }
-                    })
+                    }),
+                    _vm._v(" "),
+                    _vm.activePeer
+                      ? _c("span", {
+                          staticClass: "text-muted",
+                          domProps: {
+                            textContent: _vm._s(
+                              _vm.activePeer.name + " is typing..."
+                            )
+                          }
+                        })
+                      : _vm._e()
                   ])
                 ])
               ]
